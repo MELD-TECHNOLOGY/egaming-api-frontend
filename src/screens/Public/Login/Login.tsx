@@ -9,10 +9,13 @@ import {LoadingButton} from "../../../components/feedback/LoadingButton.tsx";
 import {AlertCard} from "../../../components/feedback/AlertCard.tsx";
 import {useToast} from "../../../components/feedback/Toast.tsx";
 import { getAppInfo } from "../../../lib/httpClient.ts";
-import {RefreshedView} from "../../../components/RefreshedView/RefreshedView.tsx";
+// import {RefreshedView} from "../../../components/RefreshedView/RefreshedView.tsx";
+import {useRefresh} from "../../../lib/hooks.ts";
+
 
 
 export const Login = (): JSX.Element => {
+  const { hardRefresh } = useRefresh();
   const [searchParams] = useSearchParams();
   const formRef = useRef(null);
   const {show} = useToast();
@@ -60,12 +63,13 @@ export const Login = (): JSX.Element => {
         // This help solves the auth code needed after a failed login attempt
         setHasError(getAppInfo('hasError') !== null);
         const isErr = searchParams.get('error') !== null;
+        console.log(isApp);
         if(isErr) {
             setAppInfo("hasError", "true");
             navigate('/');
         }
         if(!isApp) {
-            navigate('/');
+            hardRefresh('/');
         }else {
             setNotReady(false);
         }
@@ -222,7 +226,7 @@ export const Login = (): JSX.Element => {
               </button>
             </p>
           </div>
-         <RefreshedView />
+         {/*<RefreshedView />*/}
         </form>
 
         {/* Footer */}

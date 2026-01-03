@@ -30,6 +30,7 @@ export interface Lga {
 }
 
 export interface FilterRequest {
+    publicId?: string;
     page: number;
     size: number;
     name?: string;

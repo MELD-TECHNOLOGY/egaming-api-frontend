@@ -281,7 +281,7 @@ export const ApiKeyManagement = (): JSX.Element => {
                                             Learn how to integrate with our API and manage your gaming operations programmatically.
                                         </p>
                                         <button className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                                onClick={() => window.open('http://72.60.47.61/docs/developer/index.html#tag--Stake-Registration', '_blank')}>
+                                                onClick={() => window.open('http://stake-api.meld-tech.com/docs/developer/index.html#tag--Stake-Registration', '_blank')}>
                                             View Documentation →
                                         </button>
                                     </div>

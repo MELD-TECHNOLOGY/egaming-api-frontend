@@ -23,7 +23,7 @@ import {Pagination} from "../../../components/common/Pagination.tsx";
 import {useOperatorData} from "../Dashboard/Dashboard.tsx";
 
 
-function useTransactionsReport(datePart: string, page: number, size: number, startDate?: string, endDate?: string)
+function useTransactionsReport(datePart: string, page: number, size: number, startDate?: string, endDate?: string, publicId?: string)
     : { data: any, loading: boolean, error: any, reload: any } {
     type OperatorsPayload = {
         page: number; size: number; totalPages: number; total: number; previous: number; next: number; data: TransactionData[]
@@ -32,11 +32,11 @@ function useTransactionsReport(datePart: string, page: number, size: number, sta
     const { from, to } = (datePart === 'Date Range') ? { from: startDate, to: endDate } : getDateParts(datePart);
 
     // @ts-ignore
-    const params = useMemo(() => ({ page: page, size: size, status: '', sort: 'createdOn-desc', startDate: from.concat('T00:00:00Z'), endDate: to.concat('T23:59:59Z') }), [page, size, '', 'createdOn-desc', from, to]);
+    const params = useMemo(() => ({ publicId, page: page, size: size, status: '', sort: 'createdOn-desc', startDate: from.concat('T00:00:00Z'), endDate: to.concat('T23:59:59Z') }), [publicId, page, size, '', 'createdOn-desc', from, to]);
 
     return useDataLoader<OperatorsPayload, typeof params>(
         async (p, ) => {
-            const qs = buildQueryString({ page: p.page, size: p.size,
+            const qs = buildQueryString({ publicId: p.publicId, page: p.page, size: p.size,
                 status: p.status === 'all' ? undefined : p.status, sort: p.sort,
                 startDate: p.startDate, endDate: p.endDate });
             const resp = await fetchWinningTransactions(qs);
@@ -74,7 +74,7 @@ export const Report: React.FC = () => {
         dateRange: 'MONTH'
     });
     const operatorSummary = useOperatorMetrics(operator?.publicId);
-    const { data, loading, error, reload } = useTransactionsReport(dateRange, page, size, customDR.from, customDR.to);
+    const { data, loading, error, reload } = useTransactionsReport(dateRange, page, size, customDR.from, customDR.to, operator?.publicId);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 

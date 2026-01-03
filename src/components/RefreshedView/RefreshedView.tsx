@@ -10,7 +10,7 @@ export const RefreshedView: React.FC = () => {
         const intervalId = setInterval(() => {
             setRefreshToggle(prev => !prev);
             navigate("/", { replace: true });
-        }, 30000);
+        }, 120000);
 
         // This cleanup function runs when the component unmounts
         return () => clearInterval(intervalId);

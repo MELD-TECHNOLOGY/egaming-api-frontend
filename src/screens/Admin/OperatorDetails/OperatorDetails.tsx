@@ -72,7 +72,7 @@ const recentActivities = [
     type: "game",
     status: "success"
   },
-  {
+/*   {
     id: 2,
     action: "Revenue Update",
     description: "Monthly revenue report generated",
@@ -95,7 +95,7 @@ const recentActivities = [
     timestamp: "1 week ago",
     type: "compliance",
     status: "success"
-  }
+  } */
 ];
 
 
@@ -240,7 +240,7 @@ export const OperatorDetails = (): JSX.Element => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+{/*               <div className="flex items-center gap-3">
                 {isEditing ? (
                   <>
                   </>
@@ -255,7 +255,7 @@ export const OperatorDetails = (): JSX.Element => {
                     </Button>
                   </>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -297,7 +297,7 @@ export const OperatorDetails = (): JSX.Element => {
                   <nav className="flex space-x-8 px-6">
                     {[
                       { id: "overview", label: "Overview" },
-                      { id: "transactions", label: "Transactions" },
+                      /* { id: "transactions", label: "Transactions" }, */
                     ].map((tab) => (
                       <button
                         key={tab.id}

@@ -275,6 +275,18 @@ export const Settings = (): JSX.Element => {
                   </div>
                 </div>
 
+               {/* Middle Name */}
+                <div>
+                  <Label className="text-sm font-semibold text-gray-80 mb-2 block">
+                    Middle Name
+                  </Label>
+                    <Input
+                        value={profileData.middleName}
+                        onChange={(e) => handleProfileChange("middleName", e.target.value)}
+                        className="h-10 bg-white border-gray-30 rounded-lg"
+                    />
+                </div>
+
                 {/* Email */}
                 <div>
                   <Label className="text-sm font-semibold text-gray-80 mb-2 block">
@@ -319,17 +331,6 @@ export const Settings = (): JSX.Element => {
                   />
                 </div>
 
-                {/* Middle Name */}
-                <div>
-                  <Label className="text-sm font-semibold text-gray-80 mb-2 block">
-                    Middle Name
-                  </Label>
-                    <Input
-                        value={profileData.middleName}
-                        onChange={(e) => handleProfileChange("middleName", e.target.value)}
-                        className="h-10 bg-white border-gray-30 rounded-lg"
-                    />
-                </div>
               </div>
             </div>
 

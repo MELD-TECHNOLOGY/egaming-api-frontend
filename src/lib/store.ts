@@ -22,3 +22,4 @@ async function setInMemoryOperator(): Promise<OperatorData | null> {
             return null;
         }
 }
+

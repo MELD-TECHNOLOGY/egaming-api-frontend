@@ -173,17 +173,17 @@ export const Dashboard = (): JSX.Element => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div style={{ width: '100%', maxWidth: 800 }}>
                         <GroupedBarChart
-                            title="Stakes Data Overtime"
+                            title="Stakes Data Over Time"
                             data={reportData(stakes)}
-                            formatAmount={(v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v)}
+                            formatAmount={(v) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(v)}
                         />
                     </div>
 
                     <div style={{ width: '100%', maxWidth: 980 }}>
                         <GroupedBarChart
-                            title="Winings Data Overtime"
+                            title="Winnings Data Over Time"
                             data={reportData(winnings)}
-                            formatAmount={(v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v)}
+                            formatAmount={(v) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(v)}
                         />
                     </div>
                 </div>
