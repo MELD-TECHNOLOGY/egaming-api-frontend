@@ -17,11 +17,8 @@ export const LoginRedirect = () => {
             try {
                 const authUrl = await getAuthorizerUrl();
                 const url = authUrl?.data;
-                alert('Please login to continue');
-                alert(url);
+
                 if (url) {
-                    alert('Please login to continue');
-                    alert(url);
                     // @ts-ignore
                     window.location.replace(url);
                 }
