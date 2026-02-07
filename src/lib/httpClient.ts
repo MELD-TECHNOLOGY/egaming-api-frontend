@@ -222,8 +222,8 @@ function getInstanceFor(base: BaseKey): AxiosInstance {
 // ===== Public request wrapper that routes by base =====
 export async function request<T = unknown, B = unknown>(method: HttpMethod, url: string, options: RequestOptions<B> = {}): Promise<ApiResponse<T>> {
     const { base = 'api', withAuth = true, retry = 2, ...config } = options;
-    console.log("base ", base, " url ", url, " Method: ", method);
     const client = getInstanceFor(base);
+    console.log("base ", base, " url ", url, " Method: ", method, " client: ", client);
     const response = await client.request<T, AxiosResponse<T>, B>({ method, url, ...config, withAuth, retry } as any);
     return {
         data: response.data,
