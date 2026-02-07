@@ -12,14 +12,14 @@ export const LoginRedirect = () => {
     useEffect(() => {
         if (hasFetchedRef.current) return; // Prevent double-call in React 18 StrictMode (dev)
         hasFetchedRef.current = true;
-        console.log('f');
 
         (async () => {
             try {
                 const authUrl = await getAuthorizerUrl();
                 const url = authUrl?.data;
-                console.log('url: ', url);
                 if (url) {
+                    alert('Please login to continue');
+                    alert(url);
                     // @ts-ignore
                     window.location.replace(url);
                 }
