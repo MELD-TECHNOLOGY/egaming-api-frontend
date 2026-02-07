@@ -39,14 +39,14 @@ jobs:
           VITE_SERVER_SK=${{ secrets.VITE_SERVER_SK }}
           VITE_LOG_HTTP_ERRORS=${{ secrets.VITE_LOG_HTTP_ERRORS }}
           EOF
-          cat .env.production
         shell: bash
 
       - name: Build
         env:
           NODE_ENV: production
         # Vite picks .env.production automatically on production builds
-        run: npm run build
+        run: cat .env.production
+#        run: npm run build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
