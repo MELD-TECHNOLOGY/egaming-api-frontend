@@ -68,6 +68,7 @@ jobs:
 
       - name: Prepare SSH key
         run: |
+          echo $HOME
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           install -m 600 /dev/null ~/.ssh/id_deploy
