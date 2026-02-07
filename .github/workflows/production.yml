@@ -42,8 +42,6 @@ jobs:
         shell: bash
 
       - name: Build
-        env:
-          NODE_ENV: production
         # Vite picks .env.production automatically on production builds
         run: |
           mv .env.production .env
