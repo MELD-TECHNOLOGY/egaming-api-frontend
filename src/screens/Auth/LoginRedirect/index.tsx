@@ -3,7 +3,6 @@ import React, {useEffect, useRef} from "react";
 import { getAuthorizerUrl} from "../../../lib/api.ts";
 import Loader from "../../../components/Loader/Loader.tsx";
 import {AlertCard} from "../../../components/feedback/AlertCard.tsx";
-// import {getAppInfo} from "../../../lib/httpClient.ts";
 
 export const LoginRedirect = () => {
     const hasFetchedRef = useRef(false);
