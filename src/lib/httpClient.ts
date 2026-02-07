@@ -212,7 +212,9 @@ function createAxios(baseURL: string): AxiosInstance {
 
 function getInstanceFor(base: BaseKey): AxiosInstance {
     const url = BASE_MAP[base];
+    console.log("base ", base, " url ", url);
     const existing = instanceCache.get(url);
+    console.log("existing ", existing);
     if (existing) return existing;
     const inst = createAxios(url);
     instanceCache.set(url, inst);
