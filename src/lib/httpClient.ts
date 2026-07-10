@@ -121,6 +121,7 @@ function createAxios(baseURL: string): AxiosInstance {
     // Request interceptor
     inst.interceptors.request.use((config: InternalAxiosRequestConfig & { withAuth?: boolean; retry?: number }) => {
         const cfg = { ...config };
+        console.log(cfg);
         const withAuth = cfg.withAuth !== undefined ? cfg.withAuth : true;
         if (withAuth) {
             const token = getAuthToken();

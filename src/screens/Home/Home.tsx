@@ -11,7 +11,5 @@ export const Home = (): JSX.Element => {
         navigate(`/auth/login`, {replace: true });
     }, [navigate]);
 
-    return (
-        <Loader fullscreen message="Redirecting to sign in..." size="md" />
-    );
+    return ( <Loader fullscreen message="Redirecting to sign in..." size="md" /> );
 }
