@@ -27,10 +27,27 @@ import {
     OperatorVerificationResponse, LgaResponse, CompanyRequest, CompanyResponse, SignerConfig, ProfileUpdateRequest,
     UploadResponse, UploadRequest, GenericResponse, OperatorMetricsResponse, TrendSeriesResponse,
     PerformanceDistributionResponse, ApiKeyUsageSummaryResponse, ApiKeyUsageResponse, ApiKeyResponse, ApiKeyRequest,
-    MonthlyDataResponse
+    MonthlyDataResponse,
+    PartnerAgreementRequest,
+    PartnerAgreementResponse,
+    PlatformPartnerRequest,
+    PlatformPartnerResponse,
+    ServiceLevelAgreementRequest,
+    ServiceLevelAgreementResponse,
+    VerificationRequestResponse,
+    VerificationResponseResponse,
+    VoidDataResponse
 } from './models';
 import {getBase64Image} from "./uploaders.ts";
-import {Lga, OperatorData, TransactionData} from "./appModels.ts";
+import {
+    Lga,
+    OperatorData,
+    PartnerAgreementData,
+    PlatformPartnerData,
+    ServiceLevelAgreementData,
+    TransactionData,
+    VerificationRequestData
+} from "./appModels.ts";
 
 export { httpGet, httpPost, httpPut, httpPatch, httpDelete, ApiError, setAuthToken, clearAuthToken, setAppInfo, clearAllAppInfo  };
 export type { ApiResponse };
@@ -82,6 +99,12 @@ const API_KEY_USAGE_SUMMARY_URL =  `/platform/api/v1/rate-limiter/admin/usage-su
 const API_KEY_USAGE_URL =  `/platform/api/v1/rate-limiter/usage?minutesBack=`;
 const GET_OPERATOR_URL =  `${OPERATOR_URL}/me/token`;
 const API_KEY_CLIENT_URL =  `/platform/api/v1/clients`;
+
+// Partner domain endpoints
+const PARTNER_URL = `/platform/api/v1/partners`;
+const SLA_URL = `/platform/api/v1/slas`;
+const PARTNER_AGREEMENT_URL = `/platform/api/v1/partner-agreements`;
+const VERIFICATION_REQUEST_URL = `/platform/api/v1/verification-requests`;
 
 
 export { LOGIN_URL };
@@ -201,6 +224,79 @@ export async function fetchDashboardMetrics() {
 
 export async function fetchWinningTransactions(queryString: string) {
     return httpGet<GenericResponse<TransactionData>>(`${WINNING_TRANSACTIONS_URL}?${queryString}`, { base: 'api' });
+}
+
+// Partner domain
+export async function fetchPlatformPartners(queryString: string) {
+    return httpGet<GenericResponse<PlatformPartnerData>>(`${PARTNER_URL}?${queryString}`, { base: 'api' });
+}
+
+export async function fetchPlatformPartner(publicId: string) {
+    return httpGet<PlatformPartnerResponse>(`${PARTNER_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function createPlatformPartner(body: PlatformPartnerRequest) {
+    return httpPost<PlatformPartnerResponse, PlatformPartnerRequest>(PARTNER_URL, body, { base: 'api' });
+}
+
+export async function updatePlatformPartner(publicId: string, body: PlatformPartnerRequest) {
+    return httpPatch<PlatformPartnerResponse, PlatformPartnerRequest>(`${PARTNER_URL}/${publicId}`, body, { base: 'api' });
+}
+
+export async function deletePlatformPartner(publicId: string) {
+    return httpDelete<VoidDataResponse>(`${PARTNER_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function fetchServiceLevelAgreements(queryString: string) {
+    return httpGet<GenericResponse<ServiceLevelAgreementData>>(`${SLA_URL}?${queryString}`, { base: 'api' });
+}
+
+export async function fetchServiceLevelAgreement(publicId: string) {
+    return httpGet<ServiceLevelAgreementResponse>(`${SLA_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function createServiceLevelAgreement(body: ServiceLevelAgreementRequest) {
+    return httpPost<ServiceLevelAgreementResponse, ServiceLevelAgreementRequest>(SLA_URL, body, { base: 'api' });
+}
+
+export async function updateServiceLevelAgreement(publicId: string, body: ServiceLevelAgreementRequest) {
+    return httpPatch<ServiceLevelAgreementResponse, ServiceLevelAgreementRequest>(`${SLA_URL}/${publicId}`, body, { base: 'api' });
+}
+
+export async function deleteServiceLevelAgreement(publicId: string) {
+    return httpDelete<VoidDataResponse>(`${SLA_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function fetchPartnerAgreements(queryString: string) {
+    return httpGet<GenericResponse<PartnerAgreementData>>(`${PARTNER_AGREEMENT_URL}?${queryString}`, { base: 'api' });
+}
+
+export async function fetchPartnerAgreement(publicId: string) {
+    return httpGet<PartnerAgreementResponse>(`${PARTNER_AGREEMENT_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function createPartnerAgreement(body: PartnerAgreementRequest) {
+    return httpPost<PartnerAgreementResponse, PartnerAgreementRequest>(PARTNER_AGREEMENT_URL, body, { base: 'api' });
+}
+
+export async function updatePartnerAgreement(publicId: string, body: PartnerAgreementRequest) {
+    return httpPatch<PartnerAgreementResponse, PartnerAgreementRequest>(`${PARTNER_AGREEMENT_URL}/${publicId}`, body, { base: 'api' });
+}
+
+export async function deletePartnerAgreement(publicId: string) {
+    return httpDelete<VoidDataResponse>(`${PARTNER_AGREEMENT_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function fetchVerificationRequests(queryString: string) {
+    return httpGet<GenericResponse<VerificationRequestData>>(`${VERIFICATION_REQUEST_URL}?${queryString}`, { base: 'api' });
+}
+
+export async function fetchVerificationRequest(publicId: string) {
+    return httpGet<VerificationRequestResponse>(`${VERIFICATION_REQUEST_URL}/${publicId}`, { base: 'api' });
+}
+
+export async function fetchVerificationResponse(publicId: string) {
+    return httpGet<VerificationResponseResponse>(`${VERIFICATION_REQUEST_URL}/${publicId}/response`, { base: 'api' });
 }
 
 // Metrics, Analytics, and Trends

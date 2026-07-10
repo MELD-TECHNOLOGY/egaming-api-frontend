@@ -72,7 +72,7 @@ export function hasPermission({anyOf, allOf}: { anyOf?: string[]; allOf?: string
 
 
 // A simple default Access Denied UI
-const AccessDenied: React.FC = () => (
+export const AccessDenied: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center bg-gray-5 p-6">
         <div className="max-w-md w-full bg-white rounded-xl border border-gray-20 p-8 text-center">
             <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
