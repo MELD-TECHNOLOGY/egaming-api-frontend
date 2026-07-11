@@ -183,3 +183,80 @@ export interface MonthlyType {
     name: string;
     data: MonthlyData[];
 }
+
+// Partner domain models
+export type PartnerType =
+    | 'GOOGLE'
+    | 'META'
+    | 'APPLE'
+    | 'PAYMENT_PROVIDER'
+    | 'SOCIAL_MEDIA'
+    | 'APP_STORE'
+    | 'AD_NETWORK';
+
+export type PartnerStatus = 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'INACTIVE';
+
+export type AgreementType = 'DATA_SHARING' | 'VERIFICATION_SERVICE' | 'MARKETING' | 'LICENSING';
+
+export type AgreementStatus = 'DRAFT' | 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+
+export type SlaStatus = 'ACTIVE' | 'INACTIVE';
+
+export interface PlatformPartnerData {
+    publicId: string;
+    partnerCode: string;
+    partnerName: string;
+    partnerType: PartnerType;
+    country?: string;
+    contactName?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    website?: string;
+    status?: PartnerStatus;
+    userId?: string;
+    dateOnboarded?: string;
+    lastSyncDate?: string;
+    createdOn?: string;
+}
+
+export interface ServiceLevelAgreementData {
+    publicId: string;
+    name: string;
+    verificationResponseTime: number;
+    updateFrequency?: string;
+    status?: SlaStatus;
+    createdOn?: string;
+}
+
+export interface PartnerAgreementData {
+    publicId: string;
+    partnerPublicId: string;
+    partnerName?: string;
+    agreementType: AgreementType;
+    effectiveDate: string;
+    expiryDate?: string;
+    slaPublicId?: string;
+    slaName?: string;
+    dataSharingScope?: string;
+    signedDocumentUrl?: string;
+    status?: AgreementStatus;
+    createdOn?: string;
+}
+
+export interface VerificationRequestData {
+    publicId: string;
+    partnerPublicId?: string;
+    requestId?: string;
+    invoiceNumber?: string;
+    correlationId?: string;
+    requestDate?: string;
+}
+
+export interface VerificationResponseData {
+    publicId: string;
+    verificationRequestPublicId?: string;
+    status?: boolean;
+    message?: string;
+    responsePayload?: Record<string, unknown>;
+    responseDate?: string;
+}

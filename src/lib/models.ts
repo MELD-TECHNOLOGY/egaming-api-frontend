@@ -5,10 +5,20 @@ import {
     ApiKeyData,
     ApiKeyUsageData,
     ApiKeyUsageSummary,
+    AgreementStatus,
+    AgreementType,
     Lga, MonthlyType,
     OperatorSummary,
+    PartnerAgreementData,
     PerformanceDistributionData,
-    TrendSeriesData
+    PlatformPartnerData,
+    PartnerStatus,
+    PartnerType,
+    ServiceLevelAgreementData,
+    SlaStatus,
+    TrendSeriesData,
+    VerificationRequestData,
+    VerificationResponseData
 } from "./appModels.ts";
 
 export interface SignerConfig {
@@ -243,7 +253,7 @@ export interface GenericResponse<T> {
         total: number;
         previous: number;
         next: number;
-        data: [ T ]
+        data: T[]
     }
 }
 
@@ -275,7 +285,7 @@ export interface ApiKeyRequest {
     publicId: string;
     name: string;
     apiKey: 'default';
-    role: 'OPERATOR_API_USER';
+    role: 'OPERATOR_API_USER' | 'PARTNER_API_USER';
     rateLimitConfig: {
         remainingTokens: number | 50;
         capacity: number | 50;
@@ -286,4 +296,78 @@ export interface ApiKeyRequest {
 
 export interface MonthlyDataResponse {
     data: MonthlyType;
+}
+
+// Partner domain request/response models
+export interface PlatformPartnerRequest {
+    partnerCode: string;
+    partnerName: string;
+    partnerType: PartnerType;
+    country?: string;
+    contactName?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    website?: string;
+    status?: PartnerStatus;
+    userId?: string;
+}
+
+export interface ServiceLevelAgreementRequest {
+    name: string;
+    verificationResponseTime: number;
+    updateFrequency?: string;
+    status?: SlaStatus;
+}
+
+export interface PartnerAgreementRequest {
+    partnerPublicId: string;
+    agreementType: AgreementType;
+    effectiveDate: string;
+    expiryDate?: string;
+    slaPublicId?: string;
+    dataSharingScope?: string;
+    signedDocumentUrl?: string;
+    status?: AgreementStatus;
+}
+
+export interface PlatformPartnerResponse {
+    data: PlatformPartnerData;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
+}
+
+export interface ServiceLevelAgreementResponse {
+    data: ServiceLevelAgreementData;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
+}
+
+export interface PartnerAgreementResponse {
+    data: PartnerAgreementData;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
+}
+
+export interface VerificationRequestResponse {
+    data: VerificationRequestData;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
+}
+
+export interface VerificationResponseResponse {
+    data: VerificationResponseData;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
+}
+
+export interface VoidDataResponse {
+    data: null;
+    status?: boolean;
+    message?: string;
+    requestId?: string | null;
 }
