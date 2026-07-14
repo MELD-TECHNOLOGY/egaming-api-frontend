@@ -24,11 +24,17 @@ import {ChangeUserPassword} from "./screens/Public/ChangeUserPassword";
 import {EmailActivate} from "./screens/Auth/EmailActivate/EmailActivate.tsx";
 import {Adjudicator} from "./screens/Adjudicator";
 import {RequirePermission} from "./components/auth/RequirePermission.tsx";
+import {RequireRole} from "./components/auth/RequireRole.tsx";
 import {RolePromoter} from "./screens/App/RolePromoter";
 import {AuthEventsGuard} from "./components/auth/AuthEventsGuard.tsx";
 import {ApiUsage} from "./screens/Admin/ApiUsage/ApiUsage.tsx";
 import {OrganizationInfo} from "./screens/App/OrganizationInfo/OrganizationInfo.tsx";
 import {ApiKeyManagement} from "./screens/App/ApiKeyManagement/ApiKeyManagement.tsx";
+import {Partners} from "./screens/Admin/Partners/Partners.tsx";
+import {PartnerApiKey} from "./screens/Admin/Partners/PartnerApiKey.tsx";
+import {Slas} from "./screens/Admin/Slas/Slas.tsx";
+import {PartnerAgreements} from "./screens/Admin/PartnerAgreements/PartnerAgreements.tsx";
+import {VerificationAudit} from "./screens/Admin/VerificationAudit/VerificationAudit.tsx";
 
 export const App: React.FC = () => {
     return (
@@ -62,6 +68,31 @@ export const App: React.FC = () => {
                 <Route path="/app/reports" element={<AppReport />} />
                 <Route path="/app/organization" element={<OrganizationInfo />} />
                 <Route path="/app/developer" element={<ApiKeyManagement />} />
+                <Route path="/admin/partners" element={
+                    <RequireRole role="admin">
+                        <Partners />
+                    </RequireRole>
+                } />
+                <Route path="/admin/partners/api-key" element={
+                    <RequireRole role="admin">
+                        <PartnerApiKey />
+                    </RequireRole>
+                } />
+                <Route path="/admin/slas" element={
+                    <RequireRole role="admin">
+                        <Slas />
+                    </RequireRole>
+                } />
+                <Route path="/admin/partner-agreements" element={
+                    <RequireRole role="admin">
+                        <PartnerAgreements />
+                    </RequireRole>
+                } />
+                <Route path="/admin/verification-audit" element={
+                    <RequireRole role="admin">
+                        <VerificationAudit />
+                    </RequireRole>
+                } />
                 <Route path="/operators" element={
                     <RequirePermission anyOf={["CAN_VIEW_OPERATORS"]}>
                         <Operator />

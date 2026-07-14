@@ -10,6 +10,10 @@ import {
   ChevronLeft,
   ChevronRight,
   MapPin,
+  Handshake,
+  FileCheck,
+  FileSignature,
+  ShieldCheck,
   // ChevronDown,
   // ChevronUp
 } from 'lucide-react';
@@ -17,6 +21,7 @@ import { Button } from '../ui/button';
 import {cn, getAvatarProps} from '../../lib/utils';
 import {useUserProfile} from "../../lib/hooks.ts";
 import {hasPermission} from "../auth/RequirePermission.tsx";
+import {checkRole} from "../../lib/checkPrivilege.ts";
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -58,6 +63,34 @@ const navigationItems = [
     icon: Users,
     path: '/operators',
     id: 'operators',
+    access: false
+  },
+  {
+    title: 'Partners',
+    icon: Handshake,
+    path: '/admin/partners',
+    id: 'partners',
+    access: false
+  },
+  {
+    title: 'SLAs',
+    icon: FileCheck,
+    path: '/admin/slas',
+    id: 'slas',
+    access: false
+  },
+  {
+    title: 'Agreements',
+    icon: FileSignature,
+    path: '/admin/partner-agreements',
+    id: 'partner-agreements',
+    access: false
+  },
+  {
+    title: 'Verification Audit',
+    icon: ShieldCheck,
+    path: '/admin/verification-audit',
+    id: 'verification-audit',
     access: false
   },
   {
@@ -111,7 +144,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path || 
-           (path === '/operators' && (location.pathname.startsWith('/operators/') || location.pathname.startsWith('/operator-details/')));
+           (path === '/operators' && (location.pathname.startsWith('/operators/') || location.pathname.startsWith('/operator-details/'))) ||
+           (path === '/admin/partners' && location.pathname.startsWith('/admin/partners'));
   };
 
   const determinePath = (id: string, path: string) => {
@@ -123,11 +157,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
         const privileges = [
             ['CAN_VIEW_DASHBOARD'], ['CAN_VIEW_MINI_REPORTS'], ['CAN_VIEW_REPORTS'],
             ['CAN_VIEW_MINI_REPORTS'], ['CAN_VIEW_APPLICATIONS'], ['CAN_VIEW_DASHBOARD'], ['CAN_VIEW_SETTINGS']];
+        const roleGatedIds = ['partners', 'slas', 'partner-agreements', 'verification-audit'];
         let index = 0;
         for(const navItem in navigationItems ) {
-            if(navigationItems[navItem].id === 'settings' || navigationItems[navItem].id === 'lga') continue;
+            if(
+                navigationItems[navItem].id === 'settings' ||
+                navigationItems[navItem].id === 'lga' ||
+                roleGatedIds.includes(navigationItems[navItem].id)
+            ) continue;
             navigationItems[navItem].access = hasPermission({anyOf: privileges[index++]});
         }
+        navigationItems.forEach((item) => {
+            if (roleGatedIds.includes(item.id)) {
+                item.access = checkRole('admin');
+            }
+        });
     }, [navigationItems]);
 
   return (

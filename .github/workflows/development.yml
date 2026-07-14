@@ -74,6 +74,15 @@ jobs:
           printf "%s" "${{ secrets.DEV_EC2_SSH_KEY }}" > ~/.ssh/id_deploy
           ssh-keyscan -H "${{ secrets.DEV_EC2_HOST }}" >> ~/.ssh/known_hosts
 
+      - name: Test SSH authentication
+        run: |
+          ssh -vvv \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -i ~/.ssh/id_deploy \
+            "${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }}" \
+            "whoami && hostname"
+
       - name: Set release timestamp
         run: echo "RELEASE_TS=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 

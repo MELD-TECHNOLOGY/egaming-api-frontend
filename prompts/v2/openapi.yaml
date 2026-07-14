@@ -1,0 +1,1245 @@
+openapi: 3.0.1
+info:
+  title: Stake API Service - (Management)
+  description: |
+    API for stake management operations.
+    
+    ## API Versioning
+    
+    This API uses a versioning strategy with the following characteristics:
+    
+    - **URL Path Versioning**: All endpoints are prefixed with `/api/{version}/` (e.g., `/api/v1/clients`)
+    - **Supported Versions**: Currently v1 (stable) and v2 (beta)
+    - **Version Discovery**: Use the `/api/version` endpoint to get current version information
+    - **Version Compatibility**: v2 is backward compatible with v1
+    - **Version Lifecycle**: Each version has a defined lifecycle (stable, beta, deprecated, etc.)
+  version: 2025.0.0
+  contact:
+    name: Meld-Tech Platform Team
+    email: platform@meld-tech.org
+    url: https://meld-tech.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: /
+    description: Default Server URL
+tags:
+  - name: Stake Registration
+    description: Endpoints for managing stake registrations
+  - name: API Client Management
+    description: Endpoints for managing API clients
+  - name: Operators
+    description: Endpoints for managing operators
+  - name: Metrics
+    description: Endpoints for metrics and aggregations
+  - name: Rate Limit
+    description: Endpoints for rate limit operations
+  - name: API Version
+    description: Endpoints for API version information
+  - name: Platform Partners
+    description: Endpoints for managing platform partners
+  - name: Partner Agreements
+    description: Endpoints for managing partner agreements
+  - name: Service Level Agreements
+    description: Endpoints for managing service level agreements
+  - name: Verification Audit
+    description: Read-only endpoints for license verification audit records
+security:
+  - bearerAuth: []
+paths:
+  /platform/api/v1/partners:
+    post:
+      tags:
+        - Platform Partners
+      summary: Create platform partner
+      description: Requires ADMIN authority.
+      operationId: createPlatformPartner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformPartnerDto'
+      responses:
+        '201':
+          description: Platform partner created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformPartnerResponse'
+        '400':
+          description: Invalid request or duplicate partner code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    get:
+      tags:
+        - Platform Partners
+      summary: List platform partners
+      description: Requires ADMIN authority.
+      operationId: getPlatformPartners
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: createdOn-desc
+      responses:
+        '200':
+          description: Platform partners retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformPartnerPageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/partners/{publicId}:
+    get:
+      tags:
+        - Platform Partners
+      summary: Get platform partner
+      description: Requires ADMIN authority.
+      operationId: getPlatformPartner
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Platform partner found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformPartnerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Platform partner not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    patch:
+      tags:
+        - Platform Partners
+      summary: Update platform partner
+      description: Requires ADMIN authority.
+      operationId: updatePlatformPartner
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformPartnerDto'
+      responses:
+        '200':
+          description: Platform partner updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformPartnerResponse'
+        '400':
+          description: Invalid request or duplicate partner code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Platform partner not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    delete:
+      tags:
+        - Platform Partners
+      summary: Delete platform partner
+      description: Requires ADMIN authority. Performs a soft delete by setting status to INACTIVE.
+      operationId: deletePlatformPartner
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Platform partner deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Platform partner not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/partner-agreements:
+    post:
+      tags:
+        - Partner Agreements
+      summary: Create partner agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins can only create agreements for their own partner.
+      operationId: createPartnerAgreement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerAgreementDto'
+      responses:
+        '201':
+          description: Partner agreement created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '400':
+          description: Invalid request, invalid dates, or unresolved partner/SLA reference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    get:
+      tags:
+        - Partner Agreements
+      summary: List partner agreements
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins receive only their own agreements.
+      operationId: getPartnerAgreements
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: createdOn-desc
+      responses:
+        '200':
+          description: Partner agreements retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementPageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/partner-agreements/{publicId}:
+    get:
+      tags:
+        - Partner Agreements
+      summary: Get partner agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins only see their own agreements.
+      operationId: getPartnerAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Partner agreement found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Partner agreement not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    patch:
+      tags:
+        - Partner Agreements
+      summary: Update partner agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins can only update their own agreements.
+      operationId: updatePartnerAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerAgreementDto'
+      responses:
+        '200':
+          description: Partner agreement updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '400':
+          description: Invalid request or invalid dates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Partner agreement not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    delete:
+      tags:
+        - Partner Agreements
+      summary: Delete partner agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins can only delete their own agreements.
+      operationId: deletePartnerAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Partner agreement deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Partner agreement not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/slas:
+    post:
+      tags:
+        - Service Level Agreements
+      summary: Create service level agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority.
+      operationId: createServiceLevelAgreement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceLevelAgreementDto'
+      responses:
+        '201':
+          description: SLA created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLevelAgreementResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    get:
+      tags:
+        - Service Level Agreements
+      summary: List service level agreements
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins receive only linked SLAs.
+      operationId: getServiceLevelAgreements
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: name-asc
+      responses:
+        '200':
+          description: SLAs retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLevelAgreementPageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/slas/{publicId}:
+    get:
+      tags:
+        - Service Level Agreements
+      summary: Get service level agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins only see SLAs linked to their agreements.
+      operationId: getServiceLevelAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SLA found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLevelAgreementResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: SLA not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    patch:
+      tags:
+        - Service Level Agreements
+      summary: Update service level agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Shared-edit policy is enforced by the service layer.
+      operationId: updateServiceLevelAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceLevelAgreementDto'
+      responses:
+        '200':
+          description: SLA updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLevelAgreementResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    delete:
+      tags:
+        - Service Level Agreements
+      summary: Delete service level agreement
+      description: Requires ADMIN or PARTNER_ADMIN authority. Shared-edit policy is enforced by the service layer.
+      operationId: deleteServiceLevelAgreement
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SLA deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: SLA not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/verification-requests:
+    get:
+      tags:
+        - Verification Audit
+      summary: List verification requests
+      description: Requires ADMIN or PARTNER_ADMIN authority. Partner admins receive only their own audit records.
+      operationId: getVerificationRequests
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: requestDate-desc
+      responses:
+        '200':
+          description: Verification audit requests retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationRequestPageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/verification-requests/{publicId}:
+    get:
+      tags:
+        - Verification Audit
+      summary: Get verification request
+      description: Requires ADMIN or PARTNER_ADMIN authority. Cross-partner records return 404.
+      operationId: getVerificationRequest
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Verification audit request found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationRequestResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Verification audit request not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /platform/api/v1/verification-requests/{publicId}/response:
+    get:
+      tags:
+        - Verification Audit
+      summary: Get verification response
+      description: Requires ADMIN or PARTNER_ADMIN authority. Cross-partner records and missing responses return 404.
+      operationId: getVerificationResponse
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Verification audit response found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponseResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '403':
+          description: Forbidden - ADMIN or PARTNER_ADMIN authority required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '404':
+          description: Verification audit response not found or not visible to caller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token authentication
+  schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+        requestId:
+          type: string
+          nullable: true
+    
+    PaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: The list of items for the current page
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-based)
+        size:
+          type: integer
+          format: int32
+          description: The page size
+        total:
+          type: integer
+          format: int64
+          description: The total number of records
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages
+        previous:
+          type: integer
+          format: int32
+          nullable: true
+          description: The previous page number (null if on first page)
+        next:
+          type: integer
+          format: int32
+          nullable: true
+          description: The next page number (null if on last page)
+        sort:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map containing sort information (field and direction)
+        links:
+          type: object
+          additionalProperties:
+            type: string
+          description: Map containing hypermedia links for navigation
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Map containing additional metadata about the response
+
+    PlatformPartnerDto:
+      type: object
+      properties:
+        partnerCode:
+          type: string
+          example: GOOG
+        partnerName:
+          type: string
+          example: Google
+        partnerType:
+          $ref: '#/components/schemas/PartnerType'
+        country:
+          type: string
+          example: Nigeria
+        contactName:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+          example: partner@example.com
+        contactPhone:
+          type: string
+        website:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/PartnerStatus'
+        userId:
+          type: string
+      required:
+        - partnerCode
+        - partnerName
+        - partnerType
+
+    PlatformPartnerResponseDto:
+      type: object
+      properties:
+        publicId:
+          type: string
+          example: partner-1
+        partnerCode:
+          type: string
+          example: GOOG
+        partnerName:
+          type: string
+          example: Google
+        partnerType:
+          $ref: '#/components/schemas/PartnerType'
+        country:
+          type: string
+        contactName:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+        website:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/PartnerStatus'
+        userId:
+          type: string
+        dateOnboarded:
+          type: string
+          format: date-time
+        lastSyncDate:
+          type: string
+          format: date-time
+        createdOn:
+          type: string
+          format: date-time
+
+    PartnerAgreementDto:
+      type: object
+      properties:
+        partnerPublicId:
+          type: string
+          example: partner-1
+        agreementType:
+          $ref: '#/components/schemas/AgreementType'
+        effectiveDate:
+          type: string
+          format: date
+          example: '2026-06-22'
+        expiryDate:
+          type: string
+          format: date
+        slaPublicId:
+          type: string
+          example: sla-1
+        dataSharingScope:
+          type: string
+        signedDocumentUrl:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/AgreementStatus'
+      required:
+        - partnerPublicId
+        - agreementType
+        - effectiveDate
+
+    PartnerAgreementResponseDto:
+      type: object
+      properties:
+        publicId:
+          type: string
+          example: agreement-1
+        partnerPublicId:
+          type: string
+          example: partner-1
+        partnerName:
+          type: string
+        agreementType:
+          $ref: '#/components/schemas/AgreementType'
+        effectiveDate:
+          type: string
+          format: date
+        expiryDate:
+          type: string
+          format: date
+        slaPublicId:
+          type: string
+        slaName:
+          type: string
+        dataSharingScope:
+          type: string
+        signedDocumentUrl:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/AgreementStatus'
+        createdOn:
+          type: string
+          format: date-time
+
+    ServiceLevelAgreementDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Standard Verification
+        verificationResponseTime:
+          type: integer
+          format: int32
+          minimum: 1
+          example: 10
+        updateFrequency:
+          type: string
+          example: DAILY
+        status:
+          $ref: '#/components/schemas/SlaStatus'
+      required:
+        - name
+        - verificationResponseTime
+
+    ServiceLevelAgreementResponseDto:
+      type: object
+      properties:
+        publicId:
+          type: string
+          example: sla-1
+        name:
+          type: string
+          example: Standard Verification
+        verificationResponseTime:
+          type: integer
+          format: int32
+          example: 10
+        updateFrequency:
+          type: string
+        status:
+          $ref: '#/components/schemas/SlaStatus'
+        createdOn:
+          type: string
+          format: date-time
+
+    VerificationRequestResponseDto:
+      type: object
+      properties:
+        publicId:
+          type: string
+          example: vr-public
+        partnerPublicId:
+          type: string
+          example: partner-1
+        requestId:
+          type: string
+          example: VR-123
+        invoiceNumber:
+          type: string
+          example: EN344422
+        correlationId:
+          type: string
+          example: corr-1
+        requestDate:
+          type: string
+          format: date-time
+          example: '2026-06-22T08:00:00Z'
+
+    VerificationResponseResponseDto:
+      type: object
+      properties:
+        publicId:
+          type: string
+          example: resp-public
+        verificationRequestPublicId:
+          type: string
+          example: vr-public
+        status:
+          type: boolean
+        message:
+          type: string
+          example: Document Executed Successfully
+        responsePayload:
+          type: object
+          additionalProperties: true
+        responseDate:
+          type: string
+          format: date-time
+          example: '2026-06-22T08:00:01Z'
+
+    PlatformPartnerResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PlatformPartnerResponseDto'
+
+    PlatformPartnerPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PlatformPartnerPaginatedResponse'
+
+    PartnerAgreementResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PartnerAgreementResponseDto'
+
+    PartnerAgreementPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PartnerAgreementPaginatedResponse'
+
+    ServiceLevelAgreementResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ServiceLevelAgreementResponseDto'
+
+    ServiceLevelAgreementPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ServiceLevelAgreementPaginatedResponse'
+
+    VerificationRequestResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VerificationRequestResponseDto'
+
+    VerificationRequestPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VerificationRequestPaginatedResponse'
+
+    VerificationResponseResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VerificationResponseResponseDto'
+
+    VoidResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          properties:
+            data:
+              nullable: true
+
+    PlatformPartnerPaginatedResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/PlatformPartnerResponseDto'
+
+    PartnerAgreementPaginatedResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/PartnerAgreementResponseDto'
+
+    ServiceLevelAgreementPaginatedResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ServiceLevelAgreementResponseDto'
+
+    VerificationRequestPaginatedResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/VerificationRequestResponseDto'
+
+    PartnerType:
+      type: string
+      enum:
+        - GOOGLE
+        - META
+        - APPLE
+        - PAYMENT_PROVIDER
+        - SOCIAL_MEDIA
+        - APP_STORE
+        - AD_NETWORK
+
+    PartnerStatus:
+      type: string
+      enum:
+        - PENDING
+        - ACTIVE
+        - SUSPENDED
+        - INACTIVE
+
+    AgreementType:
+      type: string
+      enum:
+        - DATA_SHARING
+        - VERIFICATION_SERVICE
+        - MARKETING
+        - LICENSING
+
+    AgreementStatus:
+      type: string
+      enum:
+        - DRAFT
+        - ACTIVE
+        - EXPIRED
+        - TERMINATED
+
+    SlaStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
